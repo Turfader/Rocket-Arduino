@@ -1,32 +1,58 @@
-// The main file that the arduino will run off of. Keep this file clean. Don't push anything broken to this file plz. Leave comments plz.
+// C++ code
+//
 
-#define LED 12
+#define LED_SAFETY 12
 #define SAFETY_OUT 8
 #define SAFETY_IN 7
+
+#define LED_SWITCH 11
+#define SWITCH_OUT 6
+#define SWITCH_IN 5
+
+#define LED_READY_TO_FIRE 0
 
 void setup()
 {
 	Serial.begin(9600);
  	Serial.println();
-	pinMode(LED, OUTPUT);
+	pinMode(LED_SAFETY, OUTPUT);
  	pinMode(SAFETY_OUT, OUTPUT);
 	pinMode(SAFETY_IN, INPUT);
+  
+  	pinMode(LED_SWITCH, OUTPUT);
+  	pinMode(SWITCH_OUT, OUTPUT);
+  	pinMode(SWITCH_IN, INPUT);
+  
+  	pinMode(LED_READY_TO_FIRE, OUTPUT);
 }
 
 void loop()
 {
-  // Safety system. Do not break. Am thinking of changing to a while loop for extra security. 
-  //Anyway, as long as there is a wire connecting pins 7 and 8, nothing should happen.
-	digitalWrite(LED, HIGH);
+	digitalWrite(LED_SAFETY, HIGH);
 	digitalWrite(SAFETY_OUT, HIGH);
-  	if(digitalRead(SAFETY_IN) == LOW)
+  
+  	digitalWrite(LED_SWITCH, HIGH);
+    digitalWrite(SWITCH_OUT, HIGH);
+  
+  	digitalWrite(LED_READY_TO_FIRE, LOW);
+  	
+  	if(!digitalRead(SAFETY_IN) == LOW)
     {
-      Serial.println("SAFETY OFF");
-      digitalWrite(LED, LOW);
+    	Serial.println("SAFETY ON");
+      	delay(100);
+      	return;
     }
-  	else
+ 	Serial.println("SAFETY OFF");
+	digitalWrite(LED_SAFETY, LOW);
+	
+  	if(!digitalRead(SWITCH_IN) == LOW)
     {
-      Serial.println("SAFETY ON");
+    	Serial.println("SWITCH OFF");
+    	delay(100);
+      	return;
     }
-  	delay(100);
+  	Serial.println("SWITCH ON");
+  	digitalWrite(LED_SWITCH, LOW);
+  
+    delay(100);
 }
